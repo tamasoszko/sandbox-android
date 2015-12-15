@@ -1,0 +1,254 @@
+{
+  "screens": [
+    {
+      "name": "main",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0,0,56,56",
+          "actions": [
+            {
+              "type":"push",
+              "param":"drawer"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"288,151,344,207",
+          "actions": [
+            {
+              "type":"push",
+              "param":"notification_new_card"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"5,182,353,288",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc1_card_selecting"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0,0,293,120",
+          "actions": [
+            {
+              "type":"main"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"295,0,359,566",
+          "actions": [
+            {
+              "type":"main"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"26,146,122,242",
+          "actions": [
+            {
+              "type":"push",
+              "param":"bank_cards"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"173,146,269,242",
+          "actions": [
+            {
+              "type":"push",
+              "param":"transactions_list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nfc1_card_selecting",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0,0,56,56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"74,504,202,548",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc2_paying"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nfc2_paying",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0,0,56,56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"0,216,176,566",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc3_timeout"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"182, 216, 358, 566",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc3_paid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nfc3_timeout",
+      "events": [
+        {
+          "type":"tap",
+          "param":"146,335,214,370",
+          "actions": [
+            {
+              "type":"main"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"228,335,310,370",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc2_paying"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nfc3_paid",
+      "events": [
+        {
+          "type":"tap",
+          "param":"74,505,285,549",
+          "actions": [
+            {
+              "type":"main"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bank_cards",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0, 0, 56, 56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"46,80,312,250",
+          "actions": [
+            {
+              "type":"push",
+              "param":"bank_card_detail_off"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "transactions_list",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0, 0, 56, 56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        },
+        {
+          "type":"tap",
+          "param":"0,108,360,208",
+          "actions": [
+            {
+              "type":"push",
+              "param":"nfc3_paid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bank_card_detail_off",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0, 0, 56, 56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "notification_new_card",
+      "events": [
+        {
+          "type":"tap",
+          "param":"0, 0, 56, 56",
+          "actions": [
+            {
+              "type":"back"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
