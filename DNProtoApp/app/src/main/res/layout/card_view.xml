@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="@dimen/cardview_margin">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/catgeoryView">
+                <TextView
+                    style="@style/Article.Text.Category"
+                    android:id="@+id/categoryText" />
+                <ImageButton
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/categoryButton"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                style="@style/Article.Image"
+                android:id="@+id/imageView"
+                android:src="@drawable/img1"
+                android:layout_below="@+id/catgeoryView" />
+
+            <TextView
+                style="@style/Article.Text.Headline"
+                android:id="@+id/headlineText"
+                android:layout_below="@+id/imageView" />
+
+            <TextView
+                style="@style/Article.Text.Story"
+                android:id="@+id/summaryText"
+                android:layout_below="@+id/headlineText"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
