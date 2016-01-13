@@ -1,18 +1,20 @@
 package no.apps.dnproto;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import no.apps.dnproto.dagger.InjectableAppCompatActivity;
+import no.apps.dnproto.proto.AsynchTest;
 
 
-public class MainActivity extends InjectableAppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -20,35 +22,48 @@ public class MainActivity extends InjectableAppCompatActivity {
     @Inject
     Application application;
 
+//    @Named("RetrofitTest")
+////    @Named("RxJavaTest")
+////    @Named("BoltsTest")
+//    @Inject
+//    AsynchTest asynchTest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+        ((Application) getApplication()).getObjectGraph().inject(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        switch (id) {
+//            case R.id.action_settings :{
+////                getFragmentManager().
+//                return true;
+//            }
+//            case R.id.action_test: {
+//                asynchTest.preform();
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

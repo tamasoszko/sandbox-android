@@ -21,7 +21,7 @@ public class Application extends android.app.Application {
     private Object[] modules() {
         return new Object[]{
                 new AndroidModule(this),
-                new ApplicationModules()
+                new ApplicationModules(this)
         };
     }
 

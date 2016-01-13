@@ -8,12 +8,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import no.apps.dnproto.proto.AsynchTest;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -26,18 +33,35 @@ public class MainActivityFragment extends Fragment {
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
+    @Named("RetrofitTest")
+//    @Named("RxJavaTest")
+//    @Named("BoltsTest")
+    @Inject
+    AsynchTest asynchTest;
+
+    private MainFragmentAdapter adapter;
+
     public MainActivityFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new MainFragmentAdapter(((Application)getActivity().getApplication()).getObjectGraph()));
+        adapter = new MainFragmentAdapter(((Application) getActivity().getApplication()).getObjectGraph());
+        recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         return v;
     }
 
@@ -47,6 +71,11 @@ public class MainActivityFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
     @OnClick(R.id.fab)
     public void fabClicked(FloatingActionButton fab) {
         ((MainFragmentAdapter)recyclerView.getAdapter()).add();
@@ -54,4 +83,25 @@ public class MainActivityFragment extends Fragment {
             .setAction("Action", null).show();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_settings :{
+                return true;
+            }
+            case R.id.action_test: {
+                asynchTest.preform();
+            }
+            case R.id.action_refresh: {
+                adapter.refresh();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

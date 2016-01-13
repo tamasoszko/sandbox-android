@@ -31,6 +31,7 @@
                     android:layout_height="44dp"
                     android:id="@+id/categoryButton"
                     android:scaleType="fitXY"
+                    android:layout_alignParentTop="true"
                     android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
                     android:layout_alignParentRight="true"/>
 
