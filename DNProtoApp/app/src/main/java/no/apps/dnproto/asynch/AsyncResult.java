@@ -25,4 +25,8 @@ public final class  AsyncResult<T> {
     public Exception getError() {
         return error;
     }
+
+    public boolean isSuccessful() {
+        return error == null;
+    }
 }

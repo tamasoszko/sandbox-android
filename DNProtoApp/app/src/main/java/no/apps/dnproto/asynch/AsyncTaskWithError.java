@@ -2,18 +2,12 @@ package no.apps.dnproto.asynch;
 
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.inject.Inject;
 
 /**
  * Created by oszi on 13/01/16.
  */
-public abstract class AsyncTaskBase<Params, Progress, Result> {
+public abstract class AsyncTaskWithError<Params, Progress, Result> {
 
     private final  ExecutorService bgExecutor = ExecutorServices.bgExecutor();
 
@@ -22,13 +16,13 @@ public abstract class AsyncTaskBase<Params, Progress, Result> {
 
             @Override
             protected void onPreExecute() {
-                AsyncTaskBase.this.onPreExecute();
+                AsyncTaskWithError.this.onPreExecute();
             }
 
             @Override
             protected AsyncResult<Result> doInBackground(Params... params) {
                 try {
-                    Result result = AsyncTaskBase.this.doInBackground(params);
+                    Result result = AsyncTaskWithError.this.doInBackground(params);
                     return new AsyncResult<Result>(result);
                 } catch (Exception e) {
                     return new AsyncResult<Result>(e);
@@ -37,12 +31,16 @@ public abstract class AsyncTaskBase<Params, Progress, Result> {
 
             @Override
             protected void onProgressUpdate(Progress... values) {
-                AsyncTaskBase.this.onProgressUpdate(values);
+                AsyncTaskWithError.this.onProgressUpdate(values);
             }
 
             @Override
             protected void onPostExecute(AsyncResult<Result> resultHolder) {
-                AsyncTaskBase.this.onPostExecute(resultHolder);
+                if(resultHolder.isSuccessful()) {
+                    AsyncTaskWithError.this.onSuccess(resultHolder.getValue());
+                } else {
+                    AsyncTaskWithError.this.onError(resultHolder.getError());
+                }
             }
         };
 
@@ -55,11 +53,12 @@ public abstract class AsyncTaskBase<Params, Progress, Result> {
     protected void onProgressUpdate(Progress... values) {
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    protected void onPostExecute(AsyncResult<Result> asyncResult) {
-    }
+    protected abstract void onSuccess(Result asyncResult);
 
-    public final AsyncTaskBase<Params, Progress, Result> execute(Params... params) {
+    @SuppressWarnings({"UnusedDeclaration"})
+    protected abstract void onError(Exception exception);
+
+    public final AsyncTaskWithError<Params, Progress, Result> execute(Params... params) {
         asyncTask.executeOnExecutor(bgExecutor, params);
         return this;
     }

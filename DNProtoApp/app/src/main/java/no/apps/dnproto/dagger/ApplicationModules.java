@@ -16,7 +16,7 @@ import dagger.Provides;
 import no.apps.dnproto.Application;
 import no.apps.dnproto.MainActivity;
 import no.apps.dnproto.MainFragmentAdapter;
-import no.apps.dnproto.asynch.AsyncTaskBase;
+import no.apps.dnproto.asynch.AsyncTaskWithError;
 import no.apps.dnproto.asynch.RetryHandler;
 import no.apps.dnproto.dal.ArticleProvider;
 import no.apps.dnproto.dal.SimpleParseArticleProvider;
@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
         , ParseRxJavaArticleProvider.class
         , SimpleParseArticleProvider.class
         , ExecutorService.class
-        , AsyncTaskBase.class
+        , AsyncTaskWithError.class
     },
     library = true
 )
