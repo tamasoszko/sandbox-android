@@ -22,7 +22,6 @@ public class BoltsUtil {
                     throw new IllegalStateException("Task must be completed");
                 }
                 if(task.isCancelled()) {
-                    callback.onCancel();
                 } else if(task.isFaulted()) {
                     callback.onError(task.getError());
                 } else {

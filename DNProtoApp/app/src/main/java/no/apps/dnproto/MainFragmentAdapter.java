@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +27,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.ObjectGraph;
+import no.apps.dnproto.asynch.Async;
+import no.apps.dnproto.asynch.Callback;
 import no.apps.dnproto.dagger.ApplicationContext;
 import no.apps.dnproto.dal.Article;
 import no.apps.dnproto.dal.ArticleIndex;
@@ -109,8 +112,142 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
 
     public void refresh() {
 
-        new ArticleBoltsLoader().run();
+//        new ArticleBoltsLoader().run();
+        new SimpleArticleLoader(articleProvider, new Callback<Void>() {
+            @Override
+            public void onError(Exception exception) {
+                Log.e(getClass().getName(), exception.getLocalizedMessage(), exception);
+            }
+            @Override
+            public void onSuccess(Void param) {
+                Log.d(getClass().getName(), "All done.");
+            }
+        },
+        new SimpleArticleLoader.Observer() {
+            @Override
+            public void onIndexes(List<ArticleIndex> indexes) {
+                Log.d(getClass().getName(), "Indexes downloaded, size=" + indexes.size());
+            }
+
+            @Override
+            public void onArticle(Article article) {
+                Log.d(getClass().getName(), "Article downloaded, id=" + article.getId());
+                int index = articles.indexOf(article);
+                if(index != -1) {
+                    articles.remove(index);
+                    articles.add(index, article);
+                    notifyItemChanged(index);
+                } else {
+                    articles.add(article);
+                    notifyDataSetChanged();
+                }
+            }
+        }).run();
     }
+
+    private static class SimpleArticleLoader implements Runnable {
+
+        interface Observer {
+            void onIndexes(List<ArticleIndex> indexes);
+            void onArticle(Article article);
+        }
+
+        private final Callback<Void> callback;
+        private final Observer observer;
+        private final ArticleProvider articleProvider;
+
+        private SimpleArticleLoader(ArticleProvider articleProvider
+            , Callback<Void> callback
+            , Observer observer) {
+            this.articleProvider = articleProvider;
+            this.callback = callback;
+            this.observer = observer;
+        }
+
+        @Override
+        public void run() {
+            Async.runInBackground(new Runnable() {
+                @Override
+                public void run() {
+                    doRun();
+                }
+            });
+        }
+
+        private void doRun() {
+            try {
+                List<ArticleIndex> indexes = articleProvider.getArticleIndexes();
+                notifyIndexes(Collections.unmodifiableList(indexes));
+                final CountDownLatch latch = new CountDownLatch(indexes.size());
+                for(final ArticleIndex index : indexes) {
+                    new no.apps.dnproto.asynch.Task<Article>(new Callback<Article>() {
+                        @Override
+                        public void onSuccess(Article article) {
+                            notifyArticle(article);
+                            latch.countDown();
+                        }
+                        @Override
+                        public void onError(Exception error) {
+                            notifyError(error);
+                            latch.countDown();
+                        }
+                    }) {
+                        @Override
+                        public Article call() throws Exception {
+                            return articleProvider.getArticle(index.getId());
+                        }
+                    }.submit();
+                }
+                latch.await();
+                notifyFinished();
+            } catch (Exception e) {
+                notifyError(e);
+            }
+        }
+
+        private void notifyIndexes(final List<ArticleIndex> indexes) {
+            if(observer == null) {
+                return;
+            }
+            Async.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    observer.onIndexes(indexes);
+                }
+            });
+        }
+
+        private void notifyError(final Exception exception) {
+            Async.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onError(exception);
+                }
+            });
+        }
+
+        private void notifyArticle(final Article article) {
+            if(observer == null) {
+                return;
+            }
+            Async.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    observer.onArticle(article);
+                }
+            });
+        }
+
+        private void notifyFinished() {
+            Async.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onSuccess(null);
+                }
+            });
+        }
+    }
+
 
     private class ArticleBoltsLoader implements Runnable {
 
@@ -118,6 +255,8 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         public void run() {
             articles.clear();
             notifyDataSetChanged();
+
+
             Task.callInBackground(new DownloadIndexes(articleProvider))
             .onSuccessTask(new DownloadArticlesParallel(articleProvider));
         }

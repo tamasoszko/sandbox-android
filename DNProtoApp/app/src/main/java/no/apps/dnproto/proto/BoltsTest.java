@@ -62,11 +62,6 @@ public class BoltsTest implements AsynchTest {
                 public void onError(Exception error) {
                     Log.e(AsynchTest.LOG_TAG, "Error, reason=" + error.getLocalizedMessage(), error);
                 }
-
-                @Override
-                public void onCancel() {
-                    Log.d(AsynchTest.LOG_TAG, "Cancelled");
-                }
             }
         );
     }

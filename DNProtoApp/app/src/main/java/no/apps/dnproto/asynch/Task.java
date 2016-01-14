@@ -12,24 +12,24 @@ import java.util.concurrent.Future;
  * Created by oszi on 13/01/16.
  */
 
-public abstract class BackgroundTask<Result> implements Callable<Result> {
+public abstract class Task<Result> implements Callable<Result> {
 
     private final Callback<Result> callback;
     private final ExecutorService executorService;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
-    public BackgroundTask(Callback<Result> callback) {
+    public Task(Callback<Result> callback) {
         this.callback = callback;
-        this.executorService = Executors.newCachedThreadPool();
+        this.executorService = Async.bgExecutor;
     }
 
-    public BackgroundTask(Callback<Result> callback, ExecutorService executorService) {
+    public Task(Callback<Result> callback, ExecutorService executorService) {
         this.callback = callback;
         this.executorService = executorService;
     }
 
-    protected void submit() {
+    public void submit() {
 
         Future<?> future = executorService.submit(new Runnable() {
             @Override
