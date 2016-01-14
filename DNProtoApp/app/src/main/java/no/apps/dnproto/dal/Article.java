@@ -33,6 +33,9 @@ public class Article {
     @SerializedName("bodyText")
     private String bodyText;
 
+    @SerializedName("order")
+    private int order;
+
 
     @Override
     public String toString() {
@@ -43,7 +46,9 @@ public class Article {
             ", category='" + category + '\'' +
             ", title='" + title + '\'' +
             ", summaryText='" + summaryText + '\'' +
+            ", headlineText='" + headlineText + '\'' +
             ", bodyText='" + bodyText + '\'' +
+            ", order=" + order +
             '}';
     }
 
@@ -91,4 +96,10 @@ public class Article {
     public String getBodyText() {
         return bodyText;
     }
+
+    public int getOrder() {
+        return order;
+    }
+
 }
+

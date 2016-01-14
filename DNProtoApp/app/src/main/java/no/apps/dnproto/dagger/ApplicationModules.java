@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,11 +16,13 @@ import dagger.Provides;
 import no.apps.dnproto.Application;
 import no.apps.dnproto.MainActivity;
 import no.apps.dnproto.MainFragmentAdapter;
+import no.apps.dnproto.asynch.AsyncTaskBase;
 import no.apps.dnproto.asynch.RetryHandler;
 import no.apps.dnproto.dal.ArticleProvider;
+import no.apps.dnproto.dal.SimpleParseArticleProvider;
 import no.apps.dnproto.proto.AsynchTest;
 import no.apps.dnproto.proto.BoltsTest;
-import no.apps.dnproto.dal.ParseArticleProvider;
+import no.apps.dnproto.dal.ParseRxJavaArticleProvider;
 import no.apps.dnproto.proto.RetrofitTest;
 import no.apps.dnproto.proto.RxJavaTest;
 import okhttp3.Interceptor;
@@ -39,7 +43,10 @@ import retrofit2.Retrofit;
         , OkHttpClient.class
         , Gson.class
         , Retrofit.class
-        , ParseArticleProvider.class
+        , ParseRxJavaArticleProvider.class
+        , SimpleParseArticleProvider.class
+        , ExecutorService.class
+        , AsyncTaskBase.class
     },
     library = true
 )
@@ -119,8 +126,20 @@ public class ApplicationModules {
     }
 
     @Provides
-    @Named("Parse")
-    ArticleProvider provideArticleProvider() {
-        return application.getObjectGraph().inject(new ParseArticleProvider());
+    @Named("RxJava")
+    ArticleProvider provideRxJavaArticleProvider() {
+        return application.getObjectGraph().inject(new ParseRxJavaArticleProvider());
+    }
+
+    @Provides
+    @Named("Simple")
+    ArticleProvider provideSimpleArticleProvider() {
+        return application.getObjectGraph().inject(new SimpleParseArticleProvider());
+    }
+
+    @Provides
+    @Singleton
+    ExecutorService provideBackgroundExecutorService() {
+        return application.getObjectGraph().inject(Executors.newCachedThreadPool());
     }
 }

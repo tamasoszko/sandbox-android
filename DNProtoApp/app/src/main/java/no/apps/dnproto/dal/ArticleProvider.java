@@ -1,5 +1,7 @@
 package no.apps.dnproto.dal;
 
+import java.util.List;
+
 import no.apps.dnproto.dal.Article;
 import rx.Observable;
 
@@ -8,7 +10,7 @@ import rx.Observable;
  */
 public interface ArticleProvider {
 
-    Observable<ArticleIndex> getArticleIndexes();
-    Observable<Article> getArticle(String id);
+    List<ArticleIndex> getArticleIndexes() throws Exception;
+    Article getArticle(String id) throws Exception;
 
 }

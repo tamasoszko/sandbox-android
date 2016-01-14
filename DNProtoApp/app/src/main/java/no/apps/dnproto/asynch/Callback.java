@@ -1,10 +1,12 @@
 package no.apps.dnproto.asynch;
 
 /**
- * Created by oszi on 08/01/16.
+ * Created by oszi on 13/01/16.
  */
-public interface Callback<T> {
-    void onSuccess(T obj);
+public interface Callback<Result> {
+    void onSuccess(Result obj);
+
     void onError(Exception error);
+
     void onCancel();
 }

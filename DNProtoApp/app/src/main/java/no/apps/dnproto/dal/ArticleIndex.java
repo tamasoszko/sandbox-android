@@ -8,7 +8,7 @@ import java.util.Date;
 public class ArticleIndex {
 
     private String id;
-
+    private int order;
     private Date updatedAt;
 
     ArticleIndex(Builder builder) {
@@ -22,6 +22,10 @@ public class ArticleIndex {
 
     public Date getUpdatedAt() {
         return updatedAt;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     static class Builder {
